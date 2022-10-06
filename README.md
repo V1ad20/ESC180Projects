@@ -12,12 +12,6 @@ asf
 asd
 fasd
 fw
-<<<<<<< HEAD
-
-
-dfdsfsfksjdflsd
-
-=======
 asdf
 asf
 asd
@@ -30,4 +24,3 @@ f
 asdf
 sadf
 as
->>>>>>> 9f8398cc4841657dae22a5c02957d18c53e56d29
