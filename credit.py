@@ -76,7 +76,26 @@ def purchase(amount, day, month, country):
     last_update_month = month
     last_country2 = last_country
     last_country = country
+
+def update(day,month):
+    global last_update_month
+    month_diff = month-last_update_month
+
+    if (month_diff > 1):
+        global cur_balance_owing_intst
+        global cur_balance_owing_recent
+        cur_balance_owing_intst *= 1.05**month_diff
+        cur_balance_owing_recent *= 1.05**(month_diff-1)
+        cur_balance_owing_intst += cur_balance_owing_recent
+        cur_balance_owing_recent = 0
+
+        last_update_month = month
+
     
+
+
+    
+
 def amount_owed(day, month):
     pass
     
