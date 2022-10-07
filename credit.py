@@ -16,6 +16,7 @@ def initialize():
     global last_update_day, last_update_month
     global last_country, last_country2
     global activated # track account active or frozen
+    global MONTHLY_INTEREST_RATE
     
     cur_balance_owing_intst = 0
     cur_balance_owing_recent = 0
@@ -83,9 +84,10 @@ def update(month):
     if (month_diff >= 1):
         global cur_balance_owing_intst
         global cur_balance_owing_recent
+        global MONTHLY_INTEREST_RATE
 
-        cur_balance_owing_intst *= 1.05 ** month_diff
-        cur_balance_owing_recent *= 1.05 ** (month_diff - 1)
+        cur_balance_owing_intst *= (1 + MONTHLY_INTEREST_RATE) ** month_diff
+        cur_balance_owing_recent *= (1 + MONTHLY_INTEREST_RATE) ** (month_diff - 1)
         cur_balance_owing_intst += cur_balance_owing_recent
         cur_balance_owing_recent = 0
 
