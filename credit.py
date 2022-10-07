@@ -15,6 +15,7 @@ def initialize():
     global cur_balance_owing_intst, cur_balance_owing_recent
     global last_update_day, last_update_month
     global last_country, last_country2
+    global activated # track account active or frozen
     
     cur_balance_owing_intst = 0
     cur_balance_owing_recent = 0
@@ -23,6 +24,8 @@ def initialize():
     
     last_country = None
     last_country2 = None    
+
+    activated = True
     
     MONTHLY_INTEREST_RATE = 0.05
 
@@ -39,10 +42,40 @@ def date_same_or_later(day1, month1, day2, month2):
     
 def all_three_different(c1, c2, c3):
     return not(c1 == c2 or c2 == c3 or c1 == c3)
-    
+
+def card_status(c1, c2, c3):
+    '''status of card, if it is deactivated then return False, if active and
+    countries are not 3 different return True, if countries are all three
+    different then deactivated and return False'''
+    global activated
+
+    if not activated: # if the card is frozen, return False
+        return activated
+    elif activated and (not all_three_different(c1, c2, c3)): #if the card isn't frozen and the countries aren't all different return True
+        return activated
+    else:
+        activated = False
+        return activated
         
 def purchase(amount, day, month, country):
-    pass
+    '''runs a purchase with amount on day month country, if the date is on same day
+    or later and also not all three different countries past 3 transactions
+    it just does the purchase, if not return string saying error
+    RECOMMENT'''
+    global cur_balance_owing_intst, cur_balance_owing_recent
+    global last_update_day, last_update_month
+    global last_country, last_country2
+    if not(date_same_or_later(day, month, last_update_day, last_update_month) or card_status(country, last_country, last_country2)):
+        return "error"
+    else:
+        print("hi")
+
+
+
+    last_update_day = day #purchase complete, setting the last transaction details
+    last_update_month = month
+    last_country2 = last_country
+    last_country = country
     
 def amount_owed(day, month):
     pass
@@ -60,6 +93,7 @@ if __name__ == '__main__':
     # doesn't work yet.
     initialize()
 
+    purchase(1, 1, 1, "Canada")
 
     # print(date_same_or_later(1,1,1,1)) # code to test date_same_or_later
     # print(date_same_or_later(1,2,1,1))
