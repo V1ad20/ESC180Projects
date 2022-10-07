@@ -76,15 +76,15 @@ def purchase(amount, day, month, country):
     last_country2 = last_country
     last_country = country
 
-def update(day,month):
+def update(month):
     global last_update_month
     month_diff = month-last_update_month
 
     if (month_diff > 1):
         global cur_balance_owing_intst
         global cur_balance_owing_recent
-        cur_balance_owing_intst *= 1.05**month_diff
-        cur_balance_owing_recent *= 1.05**(month_diff-1)
+        cur_balance_owing_intst *= (1.05**month_diff)
+        cur_balance_owing_recent *= (1.05**(month_diff-1))
         cur_balance_owing_intst += cur_balance_owing_recent
         cur_balance_owing_recent = 0
 
@@ -152,23 +152,23 @@ if __name__ == '__main__':
     # print(all_three_different("Canada", "Canada", "Monaco"))
     # print(all_three_different("Mexico", "Canada", "Canada"))
 
-    #purchase(80, 8, 1, "Canada")
-    #print("Now owing:", amount_owed(8, 1))      # 80.0
-    #pay_bill(50, 2, 2)
-    #print("Now owing:", amount_owed(2, 2))      # 30.0     (=80-50)
-    #print("Now owing:", amount_owed(6, 3))      # 31.5     (=30*1.05)
-    #purchase(40, 6, 3, "Canada")
-    #print("Now owing:", amount_owed(6, 3))      # 71.5     (=31.5+40)
-    #pay_bill(30, 7, 3)
-    #print("Now owing:", amount_owed(7, 3))      # 41.5     (=71.5-30)
-    #print("Now owing:", amount_owed(1, 5))      # 43.65375 (=1.5*1.05*1.05+40*1.05)
-    #purchase(40, 2, 5, "France")
-    #print("Now owing:", amount_owed(2, 5))      # 83.65375 
-    #print(purchase(50, 3, 5, "United States"))  # error    (3 diff. countries in 
-                                                #          a row)
+    purchase(80, 8, 1, "Canada")
+    print("Now owing:", amount_owed(8, 1))      # 80.0
+    pay_bill(50, 2, 2)
+    print("Now owing:", amount_owed(2, 2))      # 30.0     (=80-50)
+    print("Now owing:", amount_owed(6, 3))      # 31.5     (=30*1.05)
+    purchase(40, 6, 3, "Canada")
+    print("Now owing:", amount_owed(6, 3))      # 71.5     (=31.5+40)
+    pay_bill(30, 7, 3)
+    print("Now owing:", amount_owed(7, 3))      # 41.5     (=71.5-30)
+    print("Now owing:", amount_owed(1, 5))      # 43.65375 (=1.5*1.05*1.05+40*1.05)
+    purchase(40, 2, 5, "France")
+    print("Now owing:", amount_owed(2, 5))      # 83.65375 
+    print(purchase(50, 3, 5, "United States"))  # error    (3 diff. countries in 
+                                        
                                                 
-    #print("Now owing:", amount_owed(3, 5))      # 83.65375 (no change, purchase
-                                                #           declined)
-    #print(purchase(150, 3, 5, "Canada"))        # error    (card disabled)
-    #print("Now owing:", amount_owed(1, 6))      # 85.8364375 
-                                                # (43.65375*1.05+40)
+    print("Now owing:", amount_owed(3, 5))      # 83.65375 (no change, purchase
+                                                        
+    print(purchase(150, 3, 5, "Canada"))        # error    (card disabled)
+    print("Now owing:", amount_owed(1, 6))      # 85.8364375 
+                                            
