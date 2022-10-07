@@ -10,6 +10,10 @@ This is a placeholder that you should remove once you modify the function.
 Author: Michael Guerzhoy.  Last modified: Oct. 3, 2022
 """
 
+"""ESC180 Project 1
+By: Vlad Surdu and Seok-Gyu (Brian) Kang
+Due: 10/12/2022"""
+
 # You should modify initialize()
 def initialize():
     global cur_balance_owing_intst, cur_balance_owing_recent
