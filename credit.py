@@ -27,7 +27,12 @@ def initialize():
     MONTHLY_INTEREST_RATE = 0.05
 
 def date_same_or_later(day1, month1, day2, month2):
-    pass
+    if month1 > month2:
+        return True
+    elif month1 == month2 and day1 == day2:
+        return True
+    else:
+        return False
     
 def all_three_different(c1, c2, c3):
     return not(c1 == c2 or c2 == c3 or c1 == c3)
@@ -52,10 +57,15 @@ if __name__ == '__main__':
     # doesn't work yet.
     initialize()
 
-    print(all_three_different("Canada", "Mexico", "Monaco")) # code to test all_three_different
-    print(all_three_different("Canada", "Mexico", "Canada"))
-    print(all_three_different("Canada", "Canada", "Monaco"))
-    print(all_three_different("Mexico", "Canada", "Canada"))
+    print(date_same_or_later(1,1,1,1))
+    print(date_same_or_later(1,2,1,1))
+    print(date_same_or_later(1,1,1,2))
+    print(date_same_or_later(1,2,31,1))
+
+    # print(all_three_different("Canada", "Mexico", "Monaco")) # code to test all_three_different
+    # print(all_three_different("Canada", "Mexico", "Canada"))
+    # print(all_three_different("Canada", "Canada", "Monaco"))
+    # print(all_three_different("Mexico", "Canada", "Canada"))
 
     #purchase(80, 8, 1, "Canada")
     #print("Now owing:", amount_owed(8, 1))      # 80.0
