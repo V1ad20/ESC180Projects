@@ -68,24 +68,52 @@ def purchase(amount, day, month, country):
     if not(date_same_or_later(day, month, last_update_day, last_update_month) or card_status(country, last_country, last_country2)):
         return "error"
     else:
-        print("hi")
+        update(month)
+        cur_balance_owing_recent += amount
 
-
-
-    last_update_day = day #purchase complete, setting the last transaction details
+    last_update_day = day # purchase complete, setting the last transaction details
     last_update_month = month
     last_country2 = last_country
     last_country = country
     
 def amount_owed(day, month):
-    pass
+    global last_update_day, last_update_month
+    global cur_balance_owing_intst, cur_balance_owing_recent # CHECK IF NEED TO DO THIS AFTER RUNNING UPDATE
+
+    if not date_same_or_later(day, month, last_update_day, last_update_month):
+        return "error"
+
+    update(month)
+
+    last_update_day = day
+    last_update_month = month
+
+    return(cur_balance_owing_intst + cur_balance_owing_recent)
     
 def pay_bill(amount, day, month):
-    pass
+    global last_update_day, last_update_month
+    global cur_balance_owing_intst, cur_balance_owing_recent # CHECK IF NEED TO DO THIS AFTER RUNNING UPDATE
+
+    if not date_same_or_later(day, month, last_update_day, last_update_month):
+        return "error"
+
+    update(month)
+
+    if cur_balance_owing_intst < amount: # if the payment is bigger than balance accruing interest
+        cur_balance_owing_intst -= amount
+        cur_balance_owing_recent += cur_balance_owing_intst
+        cur_balance_owing_intst = 0
+    else:
+        cur_balance_owing_intst -= amount
+
+    last_update_day = day
+    last_update_month = month
+
+    return(cur_balance_owing_intst + cur_balance_owing_recent)
         
 
 # Initialize all global variables outside the main block.
-initialize()		
+initialize()	
     
 if __name__ == '__main__':
     # Describe your testing strategy and implement it below.
