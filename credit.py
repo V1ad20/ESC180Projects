@@ -66,7 +66,9 @@ def purchase(amount, day, month, country):
     global cur_balance_owing_intst, cur_balance_owing_recent
     global last_update_day, last_update_month
     global last_country, last_country2
-    if not(date_same_or_later(day, month, last_update_day, last_update_month) and card_status(country, last_country, last_country2)):
+    if not(date_same_or_later(day, month, last_update_day, last_update_month)
+        and card_status(country, last_country, last_country2)):
+
         return "error"
     else:
         update(month)
@@ -87,7 +89,8 @@ def update(month):
         global MONTHLY_INTEREST_RATE
 
         cur_balance_owing_intst *= (1 + MONTHLY_INTEREST_RATE) ** month_diff
-        cur_balance_owing_recent *= (1 + MONTHLY_INTEREST_RATE) ** (month_diff - 1)
+        cur_balance_owing_recent *= (1 + MONTHLY_INTEREST_RATE) ** \
+            (month_diff - 1)
         cur_balance_owing_intst += cur_balance_owing_recent
         cur_balance_owing_recent = 0
 
@@ -95,7 +98,7 @@ def update(month):
 
 def amount_owed(day, month):
     global last_update_day, last_update_month
-    global cur_balance_owing_intst, cur_balance_owing_recent # CHECK IF NEED TO DO THIS AFTER RUNNING UPDATE
+    global cur_balance_owing_intst, cur_balance_owing_recent
 
     if not date_same_or_later(day, month, last_update_day, last_update_month):
         return "error"
@@ -109,7 +112,7 @@ def amount_owed(day, month):
     
 def pay_bill(amount, day, month):
     global last_update_day, last_update_month
-    global cur_balance_owing_intst, cur_balance_owing_recent # CHECK IF NEED TO DO THIS AFTER RUNNING UPDATE
+    global cur_balance_owing_intst, cur_balance_owing_recent
 
     if not date_same_or_later(day, month, last_update_day, last_update_month):
         return "error"
