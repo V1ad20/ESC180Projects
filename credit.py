@@ -27,6 +27,9 @@ def initialize():
     MONTHLY_INTEREST_RATE = 0.05
 
 def date_same_or_later(day1, month1, day2, month2):
+    '''Take in two set of dates day1, month2 and day2, month2, and return True
+    if the first date is the same or later than second date. If it
+    is before, return False.'''
     if month1 > month2:
         return True
     elif month1 == month2 and day1 == day2:
