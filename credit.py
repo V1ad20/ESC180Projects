@@ -73,9 +73,12 @@ def purchase(amount, day, month, country):
     global cur_balance_owing_intst, cur_balance_owing_recent
     global last_update_day, last_update_month
     global last_country, last_country2
-    if not(date_same_or_later(day, month, last_update_day, last_update_month)
-        and card_status(country, last_country, last_country2)):
+    if not card_status(country, last_country, last_country2):
+        last_update_day = day
+        last_update_month = month
 
+        return "error"
+    elif not date_same_or_later(day, month, last_update_day, last_update_month):
         return "error"
     else:
         update(month)
