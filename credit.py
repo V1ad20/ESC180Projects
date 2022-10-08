@@ -1,26 +1,18 @@
-"""The Credit Card Simulator starter code
-You should complete every incomplete function,
-and add more functions and variables as needed.
-Ad comments as required.
-
-Note that incomplete functions have 'pass' as the first statement:
-pass is a Python keyword; it is a statement that does nothing.
-This is a placeholder that you should remove once you modify the function.
-
-Author: Michael Guerzhoy.  Last modified: Oct. 3, 2022
-"""
-
 """ESC180 Project 1
 By: Vlad Surdu and Seok-Gyu (Brian) Kang
 Due: 10/12/2022"""
 
-# You should modify initialize()
 def initialize():
-    ''''''
+    '''Declare and initilize all global variables.'''
+    #stores the amount owed in two parts, with one being the amount that accrues interest and the other not accruing interest
     global cur_balance_owing_intst, cur_balance_owing_recent
+    #stores the date of the last simulation operation
     global last_update_day, last_update_month
+    #stores the last two countries in which there were transactions
     global last_country, last_country2
-    global activated # track account active or frozen
+    #boolean variable that tracks the status of the credit card (active or frozen)
+    global activated
+    #interest rate accrued each month. Constant and does not change
     global MONTHLY_INTEREST_RATE
     
     cur_balance_owing_intst = 0
@@ -47,32 +39,31 @@ def date_same_or_later(day1, month1, day2, month2):
         return False
     
 def all_three_different(c1, c2, c3):
-    ''''''
+    '''Return True if c1, c2, and c3 are all different countries. If any
+    overlap, return False.'''
     return not(c1 == c2 or c2 == c3 or c1 == c3)
 
 def card_status(c1, c2, c3):
-    '''status of card, if it is deactivated then return False, if active and
-    countries are not 3 different return True, if countries are all three
-    different then deactivated and return False'''
+    '''Check c1, c2, and c3 to see if they are all different countries. If so,
+    deactivate the card. Return True if card is active, False if frozen.'''
     global activated
 
-    if not activated: # if the card is frozen, return False
+    if not activated:
         return activated
-    elif activated and (not all_three_different(c1, c2, c3)): #if the card isn't frozen and the countries aren't all different return True
+    elif activated and (not all_three_different(c1, c2, c3)):
         return activated
     else:
         activated = False
         return activated
         
 def purchase(amount, day, month, country):
-    '''runs a purchase with amount on day month country, if the date is on same day
-    or later and also not all three different countries past 3 transactions
-    it just does the purchase, if not return string saying error
-    RECOMMENT'''
-    # explaing what each global variable does
+    '''Complete a purchase of amount on a specified day, month, and country.
+    Return "error" if card is deactivated or if there was a simulation
+    operation on a date later than day, month.'''
     global cur_balance_owing_intst, cur_balance_owing_recent
     global last_update_day, last_update_month
     global last_country, last_country2
+
     if not card_status(country, last_country, last_country2):
         last_update_day = day
         last_update_month = month
@@ -84,21 +75,27 @@ def purchase(amount, day, month, country):
         update(month)
         cur_balance_owing_recent += amount
 
-    last_update_day = day # purchase complete, setting the last transaction details
+    last_update_day = day
     last_update_month = month
     last_country2 = last_country
     last_country = country
 
 def update(month):
-    ''''''
+    '''Update the balances owing accruing and not accruing interest, applying
+    interest based off the month of the latest simulation operation.'''
     global last_update_month
+    global cur_balance_owing_intst, cur_balance_owing_recent
+    global MONTHLY_INTEREST_RATE
+
+    #month_diff is greater than or equal to zero
     month_diff = month - last_update_month
 
     if (month_diff >= 1):
-        global cur_balance_owing_intst
-        global cur_balance_owing_recent
-        global MONTHLY_INTEREST_RATE
-
+        # apply interest on the balance owing interest, and apply interest on
+        # balance not owing interest if applicable, when the difference in
+        # months of this and last transaction is greater than or equal to 1.
+        # Move the balance not owing interest to balance owing interest and
+        # then set it to 0.
         cur_balance_owing_intst *= (1 + MONTHLY_INTEREST_RATE) ** month_diff
         cur_balance_owing_recent *= (1 + MONTHLY_INTEREST_RATE) ** \
             (month_diff - 1)
@@ -108,7 +105,8 @@ def update(month):
         last_update_month = month
 
 def amount_owed(day, month):
-    ''''''
+    '''Return the amount owed as of day, month. Return "error" if there was a
+    simulation operation on a date later than day, month.'''
     global last_update_day, last_update_month
     global cur_balance_owing_intst, cur_balance_owing_recent
 
@@ -123,7 +121,10 @@ def amount_owed(day, month):
     return(cur_balance_owing_intst + cur_balance_owing_recent)
     
 def pay_bill(amount, day, month):
-    ''''''
+    '''Pay off the balance owed by amount, by first paying off the balance
+    accruing interest and then the balance not accuring interest. Return
+    "error" if there was a simulation operation on a date later than day,
+    month.'''
     global last_update_day, last_update_month
     global cur_balance_owing_intst, cur_balance_owing_recent
 
@@ -132,7 +133,10 @@ def pay_bill(amount, day, month):
 
     update(month)
 
-    if cur_balance_owing_intst < amount: # if the payment is bigger than balance accruing interest
+    if cur_balance_owing_intst < amount:
+        # If the payment is bigger than balance accruing interest, first pay
+        # off balance accuring interest and use the rest to pay off balance
+        # not accuring interest.
         cur_balance_owing_intst -= amount
         cur_balance_owing_recent += cur_balance_owing_intst
         cur_balance_owing_intst = 0
@@ -150,8 +154,6 @@ initialize()
     
 if __name__ == '__main__':
     # Describe your testing strategy and implement it below.
-    # What you see here is just the simulation from the handout, which
-    # doesn't work yet.
     initialize()
 
     purchase(80, 8, 1, "Canada")
