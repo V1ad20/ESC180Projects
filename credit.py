@@ -16,6 +16,7 @@ Due: 10/12/2022"""
 
 # You should modify initialize()
 def initialize():
+    ''''''
     global cur_balance_owing_intst, cur_balance_owing_recent
     global last_update_day, last_update_month
     global last_country, last_country2
@@ -46,6 +47,7 @@ def date_same_or_later(day1, month1, day2, month2):
         return False
     
 def all_three_different(c1, c2, c3):
+    ''''''
     return not(c1 == c2 or c2 == c3 or c1 == c3)
 
 def card_status(c1, c2, c3):
@@ -67,6 +69,7 @@ def purchase(amount, day, month, country):
     or later and also not all three different countries past 3 transactions
     it just does the purchase, if not return string saying error
     RECOMMENT'''
+    # explaing what each global variable does
     global cur_balance_owing_intst, cur_balance_owing_recent
     global last_update_day, last_update_month
     global last_country, last_country2
@@ -84,6 +87,7 @@ def purchase(amount, day, month, country):
     last_country = country
 
 def update(month):
+    ''''''
     global last_update_month
     month_diff = month - last_update_month
 
@@ -101,6 +105,7 @@ def update(month):
         last_update_month = month
 
 def amount_owed(day, month):
+    ''''''
     global last_update_day, last_update_month
     global cur_balance_owing_intst, cur_balance_owing_recent
 
@@ -115,6 +120,7 @@ def amount_owed(day, month):
     return(cur_balance_owing_intst + cur_balance_owing_recent)
     
 def pay_bill(amount, day, month):
+    ''''''
     global last_update_day, last_update_month
     global cur_balance_owing_intst, cur_balance_owing_recent
 
