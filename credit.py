@@ -4,13 +4,15 @@ Due: 10/12/2022"""
 
 def initialize():
     '''Declare and initilize all global variables.'''
-    #stores the amount owed in two parts, with one being the amount that accrues interest and the other not accruing interest
+    # stores the amount owed in two parts, with one being the amount that
+    # accrues interest and the other not accruing interest
     global cur_balance_owing_intst, cur_balance_owing_recent
-    #stores the date of the last simulation operation
+    # stores the date of the last simulation operation
     global last_update_day, last_update_month
-    #stores the last two countries in which there were transactions
+    # stores the last two countries in which there were transactions
     global last_country, last_country2
-    #boolean variable that tracks the status of the credit card (active or frozen)
+    # boolean variable that tracks the status of the credit card
+    # (active or frozen)
     global activated
     #interest rate accrued each month. Constant and does not change
     global MONTHLY_INTEREST_RATE
