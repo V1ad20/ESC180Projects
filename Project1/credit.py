@@ -66,7 +66,11 @@ def purchase(amount, day, month, country):
     global last_update_day, last_update_month
     global last_country, last_country2
 
-    if not card_status(country, last_country, last_country2):
+    if not(card_status(country, last_country, last_country2)\
+    or date_same_or_later(day, month, last_update_day, last_update_month)):
+        return "error"
+
+    elif not card_status(country, last_country, last_country2):
         last_update_day = day
         last_update_month = month
 
@@ -168,7 +172,17 @@ if __name__ == '__main__':
     pay_bill(30, 7, 3)
     print("Now owing:", amount_owed(7, 3))      # 41.5     (=71.5-30)
     print("Now owing:", amount_owed(1, 5))      # 43.65375 (=1.5*1.05*1.05+40*1.05)
-    purchase(40, 2, 5, "France")
+    #purchase(40, 2, 5, "France")
+    print(purchase(20, 2, 5, "Canada"))
+
+    # print(purchase(40,2,4,"France"))
+    # print(pay_bill(40,2,4))
+    # print("Now owing:", amount_owed(2, 4))
+    #print(purchase(40,2,4,"Luxembourg")) 
+
+    print(purchase(20, 2, 5, "France"))
+    print(purchase(100,1,1,"Argentina"))
+
     print("Now owing:", amount_owed(2, 5))      # 83.65375 
     print(purchase(50, 3, 5, "United States"))  # error    (3 diff. countries in a row)
                                                 
