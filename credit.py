@@ -35,7 +35,7 @@ def date_same_or_later(day1, month1, day2, month2):
     is before, return False.'''
     if month1 > month2:
         return True
-    elif month1 == month2 and day1 == day2:
+    elif month1 == month2 and day1 >= day2:
         return True
     else:
         return False
@@ -65,7 +65,7 @@ def purchase(amount, day, month, country):
     global cur_balance_owing_intst, cur_balance_owing_recent
     global last_update_day, last_update_month
     global last_country, last_country2
-    if not(date_same_or_later(day, month, last_update_day, last_update_month) or card_status(country, last_country, last_country2)):
+    if not(date_same_or_later(day, month, last_update_day, last_update_month) and card_status(country, last_country, last_country2)):
         return "error"
     else:
         update(month)
@@ -78,22 +78,18 @@ def purchase(amount, day, month, country):
 
 def update(month):
     global last_update_month
-    month_diff = month-last_update_month
+    month_diff = month - last_update_month
 
-    if (month_diff > 1):
+    if (month_diff >= 1):
         global cur_balance_owing_intst
         global cur_balance_owing_recent
-        cur_balance_owing_intst *= (1.05**month_diff)
-        cur_balance_owing_recent *= (1.05**(month_diff-1))
+
+        cur_balance_owing_intst *= 1.05 ** month_diff
+        cur_balance_owing_recent *= 1.05 ** (month_diff - 1)
         cur_balance_owing_intst += cur_balance_owing_recent
         cur_balance_owing_recent = 0
 
         last_update_month = month
-
-    
-
-
-    
 
 def amount_owed(day, month):
     global last_update_day, last_update_month
@@ -140,18 +136,6 @@ if __name__ == '__main__':
     # doesn't work yet.
     initialize()
 
-    purchase(1, 1, 1, "Canada")
-
-    # print(date_same_or_later(1,1,1,1)) # code to test date_same_or_later
-    # print(date_same_or_later(1,2,1,1))
-    # print(date_same_or_later(1,1,1,2))
-    # print(date_same_or_later(1,2,31,1))
-
-    # print(all_three_different("Canada", "Mexico", "Monaco")) # code to test all_three_different
-    # print(all_three_different("Canada", "Mexico", "Canada"))
-    # print(all_three_different("Canada", "Canada", "Monaco"))
-    # print(all_three_different("Mexico", "Canada", "Canada"))
-
     purchase(80, 8, 1, "Canada")
     print("Now owing:", amount_owed(8, 1))      # 80.0
     pay_bill(50, 2, 2)
@@ -164,11 +148,8 @@ if __name__ == '__main__':
     print("Now owing:", amount_owed(1, 5))      # 43.65375 (=1.5*1.05*1.05+40*1.05)
     purchase(40, 2, 5, "France")
     print("Now owing:", amount_owed(2, 5))      # 83.65375 
-    print(purchase(50, 3, 5, "United States"))  # error    (3 diff. countries in 
-                                        
+    print(purchase(50, 3, 5, "United States"))  # error    (3 diff. countries in a row)
                                                 
-    print("Now owing:", amount_owed(3, 5))      # 83.65375 (no change, purchase
-                                                        
+    print("Now owing:", amount_owed(3, 5))      # 83.65375 (no change, purchase declined)
     print(purchase(150, 3, 5, "Canada"))        # error    (card disabled)
-    print("Now owing:", amount_owed(1, 6))      # 85.8364375 
-                                            
+    print("Now owing:", amount_owed(1, 6))      # 85.8364375 (43.65375*1.05+40)
