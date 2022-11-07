@@ -1,3 +1,6 @@
+"""ESC180 Project 1
+By: Vlad Surdu and Seok-Gyu (Brian) Kang
+Due: 10/12/2022"""
 """Gomoku starter code
 You should complete every incomplete function,
 and add more functions and variables as needed.
@@ -43,6 +46,8 @@ def is_bounded(board, y_end, x_end, length, d_y, d_x):
     
     
 def detect_row(board, col, y_start, x_start, length, d_y, d_x):
+    ####CHANGE ME
+    open_seq_count, semi_open_seq_count = 0, 0
     return open_seq_count, semi_open_seq_count
     
 def detect_rows(board, col, length):
@@ -51,6 +56,8 @@ def detect_rows(board, col, length):
     return open_seq_count, semi_open_seq_count
     
 def search_max(board):
+        ####CHANGE ME
+    move_y, move_x = 0, 0
     return move_y, move_x
     
 def score(board):
