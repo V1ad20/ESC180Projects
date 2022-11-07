@@ -10,11 +10,37 @@ Author(s): Michael Guerzhoy with tests contributed by Siavash Kazemian.  Last mo
 """
 
 def is_empty(board):
-    pass
-    
+    for row in board:
+        for sq in row:
+            if sq != " ":
+                return False
+
+    return True
     
 def is_bounded(board, y_end, x_end, length, d_y, d_x):
-    pass
+    open_rating = 0
+    end_border = (y_end_border + d_y,x_end_border + d_x)
+    start_border = (y_end-d_y*length,x_end-d_x*length)
+
+    if (end_border[0] >= 0 and end_border[0] < len(board)):
+        if (end_border[1] >= 0 and end_border[1] < len(board)):
+            if (board[end_border[0]][end_border[1]] == " "):
+                open_rating+=1
+    
+    if (start_border[0] >= 0 and start_border[0] < len(board)):
+        if (start_border[1] >= 0 and start_border[1] < len(board)):
+            if (board[start_border[0]][start_boarder[1]] == " "):
+                open_rating+=1
+    
+    if open_rating == 2:
+        return "OPEN"
+    if open_rating == 1:
+        return "SEMIOPEN"
+    if open_rating == 0:
+        return "CLOSED"
+
+
+    
     
 def detect_row(board, col, y_start, x_start, length, d_y, d_x):
     return open_seq_count, semi_open_seq_count
