@@ -30,8 +30,20 @@ def detect_rows(board, col, length):
     return open_seq_count, semi_open_seq_count
     
 def search_max(board):
-        ####CHANGE ME
-    move_y, move_x = 0, 0
+    move_y, move_x = -1, -1 #placeholders assuming there will be a place that is empty and has a score above 0
+    max_score = 0
+
+    for y_test in range(len(board)):
+        for x_test in range(len(board[0])):
+            if board[y_test][x_test] == " ": # if there is no stone already at the location
+                board[y_test][x_test] = "b"
+
+                if max_score < score(board): # if score at this location is higher than previous highest score
+                    max_score = score(board)
+                    move_y, move_x = y_test, x_test
+                
+                board[y_test][x_test] = " "
+
     return move_y, move_x
     
 def score(board):
