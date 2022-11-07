@@ -42,9 +42,6 @@ def is_bounded(board, y_end, x_end, length, d_y, d_x):
     if open_rating == 0:
         return "CLOSED"
 
-
-    
-    
 def detect_row(board, col, y_start, x_start, length, d_y, d_x):
     ####CHANGE ME
     open_seq_count, semi_open_seq_count = 0, 0
