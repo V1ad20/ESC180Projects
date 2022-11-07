@@ -99,7 +99,19 @@ def score(board):
 
     
 def is_win(board):
-    pass
+    white = detect_rows(board, "w", 5)
+    black = detect_rows(board, "b", 5)
+    
+    if (white[0] + white[1]) > 0:
+        return("White won")
+    elif (black[0] + black[1]) > 0:
+        return("Black won")
+    else:
+        for y_test in range(len(board)):
+            for x_test in range(len(board[0])):
+                if board[y_test][x_test] == " ":
+                    return("Continue playing")
+        return("Draw")
 
 
 def print_board(board):
