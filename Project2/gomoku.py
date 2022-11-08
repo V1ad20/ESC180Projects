@@ -48,8 +48,18 @@ def detect_row(board, col, y_start, x_start, length, d_y, d_x):
     return open_seq_count, semi_open_seq_count
     
 def detect_rows(board, col, length):
-    ####CHANGE ME
     open_seq_count, semi_open_seq_count = 0, 0
+    detected = (0, 0)
+
+    for size in range(len(board)):
+        detected = detect_row(board, col, , , length, ,)
+        open_seq_count, semi_open_seq_count = detected[0], detected[1]
+
+        detected = detect_row(board, col, , , length, ,)
+        open_seq_count, semi_open_seq_count = detected[0], detected[1]
+
+
+
     return open_seq_count, semi_open_seq_count
     
 def search_max(board):
