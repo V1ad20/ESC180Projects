@@ -90,13 +90,48 @@ def max_range(board,y_start, x_start, d_y, d_x):
     return min(y_max,x_max)
     
 def detect_rows(board, col, length):
-    ####CHANGE ME
     open_seq_count, semi_open_seq_count = 0, 0
+    detected = (0, 0)
+
+    for size in range(len(board)):
+        detected = detect_row(board, col, size, 0, length, 0, 1) # at each row check all the columns (0, 1)
+        open_seq_count, semi_open_seq_count = detected[0], detected[1]
+
+        detected = detect_row(board, col, 0, size, length, 1, 0) # at each column check all the rows (1, 0)
+        open_seq_count, semi_open_seq_count = detected[0], detected[1]
+
+        if size >= length: # TEST AND THIS REMOVE THIS COMMENT THIS CODE SHOULD THEORETICALLY WORK BUT NEED TO TEST ONCE ALL THE FUNCTIONS ARE COMPLETE!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+            detected = detect_row(board, col, (8 - size), 0, length, 1, 1) # (1, 1)
+            open_seq_count, semi_open_seq_count = detected[0], detected[1]
+
+            detected = detect_row(board, col, 0, size, length, 1, -1) # (1, -1)
+            open_seq_count, semi_open_seq_count = detected[0], detected[1]
+
+            if size > 0: #should not overlap in the "corner" with code outside
+                detected = detect_row(board, col, 0, size, length, 1, 1) # (1, 1)
+                open_seq_count, semi_open_seq_count = detected[0], detected[1]
+
+            if size < 7:  #should not overlap in the "corner" with code outside
+                detected = detect_row(board, col, (size - 1), 7, length, 1, -1) # (1, -1)
+                open_seq_count, semi_open_seq_count = detected[0], detected[1]
+
     return open_seq_count, semi_open_seq_count
     
 def search_max(board):
-        ####CHANGE ME
-    move_y, move_x = 0, 0
+    move_y, move_x = -1, -1 #placeholders assuming there will be a place that is empty and has a score above 0
+    max_score = 0
+
+    for y_test in range(len(board)):
+        for x_test in range(len(board[0])):
+            if board[y_test][x_test] == " ": # if there is no stone already at the location
+                board[y_test][x_test] = "b"
+
+                if max_score < score(board): # if score at this location is higher than previous highest score
+                    max_score = score(board)
+                    move_y, move_x = y_test, x_test
+                
+                board[y_test][x_test] = " "
+
     return move_y, move_x
     
 def score(board):
@@ -129,7 +164,19 @@ def score(board):
 
     
 def is_win(board):
-    pass
+    white = detect_rows(board, "w", 5)
+    black = detect_rows(board, "b", 5)
+    
+    if (white[0] + white[1]) > 0:
+        return("White won")
+    elif (black[0] + black[1]) > 0:
+        return("Black won")
+    else:
+        for y_test in range(len(board)):
+            for x_test in range(len(board[0])):
+                if board[y_test][x_test] == " ":
+                    return("Continue playing")
+        return("Draw")
 
 
 def print_board(board):
