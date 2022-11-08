@@ -22,7 +22,7 @@ def is_empty(board):
     
 def is_bounded(board, y_end, x_end, length, d_y, d_x):
     open_rating = 0
-    end_border = (y_end_border + d_y,x_end_border + d_x)
+    end_border = (y_end + d_y, x_end + d_x)
     start_border = (y_end-d_y*length,x_end-d_x*length)
 
     if (end_border[0] >= 0 and end_border[0] < len(board)):
@@ -32,7 +32,7 @@ def is_bounded(board, y_end, x_end, length, d_y, d_x):
     
     if (start_border[0] >= 0 and start_border[0] < len(board)):
         if (start_border[1] >= 0 and start_border[1] < len(board)):
-            if (board[start_border[0]][start_boarder[1]] == " "):
+            if (board[start_border[0]][start_border[1]] == " "):
                 open_rating+=1
     
     if open_rating == 2:
@@ -41,14 +41,53 @@ def is_bounded(board, y_end, x_end, length, d_y, d_x):
         return "SEMIOPEN"
     if open_rating == 0:
         return "CLOSED"
-
-
-    
     
 def detect_row(board, col, y_start, x_start, length, d_y, d_x):
-    ####CHANGE ME
-    open_seq_count, semi_open_seq_count = 0, 0
-    return open_seq_count, semi_open_seq_count
+    num_open = 0
+    num_semi_open = 0
+    type = ""
+    max = max_range(board,y_start, x_start, d_y, d_x)
+    
+    i = 0
+    while (i < max):
+        j = i
+        while (board[y_start+j*d_y][x_start+j*d_x] == col and j < max - 1):
+            j += 1  
+
+        if (j == max - 1 and board[y_start+j*d_y][x_start+j*d_x] == col):
+            j += 1
+
+        if j-i == length:
+            j -= 1
+            type = is_bounded(board,y_start+j*d_y,x_start+j*d_x,length,d_y,d_x)
+            if type == "OPEN":
+                num_open += 1
+            elif type == "SEMIOPEN":
+                num_semi_open += 1
+
+        i = j
+        i += 1
+    
+    return (num_open,num_semi_open)
+
+def max_range(board,y_start, x_start, d_y, d_x):
+    if d_y == 0 and d_x == 0:
+        return 0
+
+    y_max = len(board)
+    x_max = len(board)
+
+    if d_y == 1:
+        y_max = len(board)-y_start
+    elif d_y == -1:
+        y_max = y_start + 1
+        
+    if d_x == 1:
+        x_max = len(board)-x_start
+    elif d_x == -1:
+        x_max = x_start + 1
+
+    return min(y_max,x_max)
     
 def detect_rows(board, col, length):
     ####CHANGE ME
