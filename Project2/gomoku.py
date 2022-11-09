@@ -89,34 +89,80 @@ def max_range(board,y_start, x_start, d_y, d_x):
 
     return min(y_max,x_max)
     
+# def detect_rows(board, col, length):
+#     open_seq_count, semi_open_seq_count = 0, 0
+#     detected = (0, 0)
+
+#     for size in range(len(board)):
+#         detected = detect_row(board, col, size, 0, length, 0, 1) # at each row check all the columns (0, 1)
+#         open_seq_count, semi_open_seq_count = detected[0], detected[1]
+
+#         detected = detect_row(board, col, 0, size, length, 1, 0) # at each column check all the rows (1, 0)
+#         open_seq_count, semi_open_seq_count = detected[0], detected[1]
+
+#         if size >= length: # TEST AND THIS REMOVE THIS COMMENT THIS CODE SHOULD THEORETICALLY WORK BUT NEED TO TEST ONCE ALL THE FUNCTIONS ARE COMPLETE!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+#             detected = detect_row(board, col, (8 - size), 0, length, 1, 1) # (1, 1)
+#             open_seq_count, semi_open_seq_count = detected[0], detected[1]
+
+#             detected = detect_row(board, col, 0, size, length, 1, -1) # (1, -1)
+#             open_seq_count, semi_open_seq_count = detected[0], detected[1]
+
+#             if size > 0: #should not overlap in the "corner" with code outside
+#                 detected = detect_row(board, col, 0, size, length, 1, 1) # (1, 1)
+#                 open_seq_count, semi_open_seq_count = detected[0], detected[1]
+
+#             if size < 7:  #should not overlap in the "corner" with code outside
+#                 detected = detect_row(board, col, (size - 1), 7, length, 1, -1) # (1, -1)
+#                 open_seq_count, semi_open_seq_count = detected[0], detected[1]
+
+#     return open_seq_count, semi_open_seq_count
+    
 def detect_rows(board, col, length):
     open_seq_count, semi_open_seq_count = 0, 0
     detected = (0, 0)
 
     for size in range(len(board)):
         detected = detect_row(board, col, size, 0, length, 0, 1) # at each row check all the columns (0, 1)
-        open_seq_count, semi_open_seq_count = detected[0], detected[1]
+        open_seq_count += detected[0]
+        semi_open_seq_count += detected[1]
 
         detected = detect_row(board, col, 0, size, length, 1, 0) # at each column check all the rows (1, 0)
-        open_seq_count, semi_open_seq_count = detected[0], detected[1]
+        open_seq_count += detected[0]
+        semi_open_seq_count += detected[1]
 
-        if size >= length: # TEST AND THIS REMOVE THIS COMMENT THIS CODE SHOULD THEORETICALLY WORK BUT NEED TO TEST ONCE ALL THE FUNCTIONS ARE COMPLETE!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-            detected = detect_row(board, col, (8 - size), 0, length, 1, 1) # (1, 1)
-            open_seq_count, semi_open_seq_count = detected[0], detected[1]
+        if size >= length: 
 
-            detected = detect_row(board, col, 0, size, length, 1, -1) # (1, -1)
-            open_seq_count, semi_open_seq_count = detected[0], detected[1]
+            #Left to right diagonal checks
+            #starts from bottom left corner
+            detected = detect_row(board, col, len(board) - size, 0, length, 1, 1)
+            open_seq_count += detected[0]
+            semi_open_seq_count += detected[1]
 
-            if size > 0: #should not overlap in the "corner" with code outside
-                detected = detect_row(board, col, 0, size, length, 1, 1) # (1, 1)
-                open_seq_count, semi_open_seq_count = detected[0], detected[1]
+            #starts from top right corner
+            detected = detect_row(board, col, 0, len(board) - size, length, 1, 1) 
+            open_seq_count += detected[0]
+            semi_open_seq_count += detected[1]
 
-            if size < 7:  #should not overlap in the "corner" with code outside
-                detected = detect_row(board, col, (size - 1), 7, length, 1, -1) # (1, -1)
-                open_seq_count, semi_open_seq_count = detected[0], detected[1]
+            #Right to left checks
+            #starts from bottom right corner
+            detected = detect_row(board, col, len(board) - 1, len(board) - size, length, -1, 1) 
+            open_seq_count += detected[0]
+            semi_open_seq_count += detected[1]
+
+            detected = detect_row(board, col, 0, size-1, length, 1, -1) 
+            open_seq_count += detected[0]
+            semi_open_seq_count += detected[1]
+
+    detected = detect_row(board, col, 0, 0, length, 1, 1)
+    open_seq_count += detected[0]
+    semi_open_seq_count += detected[1]
+
+    detected = detect_row(board, col, 0, 7, length, 1, -1) 
+    open_seq_count += detected[0]
+    semi_open_seq_count += detected[1]
 
     return open_seq_count, semi_open_seq_count
-    
+
 def search_max(board):
     move_y, move_x = -1, -1 #placeholders assuming there will be a place that is empty and has a score above 0
     max_score = 0
@@ -446,5 +492,5 @@ def some_tests():
   
             
 if __name__ == '__main__':
-    play_gomoku(8)
+    easy_testset_for_main_functions()
     

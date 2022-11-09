@@ -1,19 +1,4 @@
-def search_max(board):
-    move_y, move_x = -1, -1 #placeholders assuming there will be a place that is empty and has a score above 0
-    max_score = 0
-
-    for y_test in range(len(board)):
-        for x_test in range(len(board[0])):
-            if board[y_test][x_test] == " ": # if there is no stone already at the location
-                board[y_test][x_test] = "b"
-
-                if max_score < score(board): # if score at this location is higher than previous highest score
-                    max_score = score(board)
-                    move_y, move_x = y_test, x_test
-                
-                board[y_test][x_test] = " "
-
-    return move_y, move_x
+import gomoku
     
 def score(board):
     MAX_SCORE = 100000
@@ -42,6 +27,11 @@ def score(board):
             50   * open_b[3]                     + 
             10   * semi_open_b[3]                +  
             open_b[2] + semi_open_b[2] - open_w[2] - semi_open_w[2])
+
+def wipe(board):
+    for row in range(len(board)):
+        for col in range(len(board)):
+            board[row][col] = " "
          
 if __name__ == '__main__':
     board = [[' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
@@ -53,4 +43,79 @@ if __name__ == '__main__':
             [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
             [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ']]
 
-    print(search_max(board))
+    print(gomoku.search_max(board))
+
+    board_2 = [[' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+            [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+            [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+            [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+            [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+            [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+            [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+            [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ']]
+
+    gomoku.put_seq_on_board(board_2, y=0, x=0, d_y=1, d_x=1, length=2, col="b")
+    gomoku.print_board(board_2)
+    print(gomoku.detect_row(board_2, col = "b", y_start=0, x_start=0, length=2, d_y=1, d_x=1))
+    #Output: (0,1)
+
+    gomoku.put_seq_on_board(board_2, y=3, x=3, d_y=1, d_x=1, length=3, col="b")
+    gomoku.print_board(board_2)
+    print(gomoku.detect_row(board_2, col = "b", y_start=0, x_start=0, length=3, d_y=1, d_x=1))
+    #Output: (1,0)
+
+    board_2[2][2] = "w"
+    board_2[6][6] = "w"
+    gomoku.print_board(board_2)
+    print(gomoku.detect_row(board_2, col = "b", y_start=0, x_start=0, length=3, d_y=1, d_x=1))
+    #Output: (0,0)
+
+    gomoku.put_seq_on_board(board_2, y=3, x=5, d_y=1, d_x=-1, length=3, col="b")
+    gomoku.put_seq_on_board(board_2, y=0, x=2, d_y=1, d_x=-1, length=3, col="b")
+    gomoku.put_seq_on_board(board_2, y=3, x=5, d_y=1, d_x=0, length=3, col="b")
+    gomoku.put_seq_on_board(board_2, y=3, x=2, d_y=0, d_x=1, length=4, col="b")
+    gomoku.print_board(board_2)
+    print(gomoku.detect_row(board_2, col = "b", y_start=0, x_start=0, length=3, d_y=1, d_x=1))
+    #Output: (0,0)
+
+    print(gomoku.detect_rows(board_2,"b",3))
+
+    wipe(board_2)
+
+    gomoku.put_seq_on_board(board_2, y=4, x=3, d_y=1, d_x=1, length=2, col="b")
+    gomoku.print_board(board_2)
+    print(gomoku.detect_row(board_2, col = "b", y_start=1, x_start=0, length=2, d_y=1, d_x=1))
+    #Output: (1,0)
+
+    gomoku.put_seq_on_board(board_2, y=0, x=7, d_y=1, d_x=-1, length=2, col="w")
+    gomoku.print_board(board_2)
+    print(gomoku.detect_row(board_2, col = "w", y_start=0, x_start=7, length=2, d_y=-1, d_x=1), "-> wrong row direction of d_y=-1,d_x=1")
+    #Output: (0,0)
+
+    print(gomoku.detect_row(board_2, col = "w", y_start=0, x_start=7, length=2, d_y=1, d_x=-1))
+    #Output: (1,0)
+
+    wipe(board_2)
+
+    gomoku.put_seq_on_board(board_2, y=5, x=0, d_y=1, d_x=1, length=2, col="w")
+    gomoku.print_board(board_2)
+    print(gomoku.detect_row(board_2, col = "w", y_start=5, x_start=0, length=2, d_y=1, d_x=1))
+    print(gomoku.detect_row(board_2, col = "w", y_start=6, x_start=1, length=2, d_y=-1, d_x=-1))
+    #Output: (0,1)\n(0,1)
+
+    board_2[7][2] = "b"
+    gomoku.print_board(board_2)
+    print(gomoku.detect_row(board_2, col = "w", y_start=5, x_start=0, length=2, d_y=1, d_x=1))
+    print(gomoku.detect_row(board_2, col = "w", y_start=6, x_start=1, length=2, d_y=-1, d_x=-1))
+    #Output: (0,0)\n(0,0)
+
+
+
+
+
+
+
+
+
+
+
