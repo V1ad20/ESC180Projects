@@ -60,6 +60,37 @@ def detect_row(board, col, y_start, x_start, length, d_y, d_x):
     
     return (num_open,num_semi_open)
 
+def detect_row2(board, col, y_start, x_start, length, d_y, d_x):
+    num_open = 0
+    num_semi_open = 0
+    num_closed = 0
+    type = ""
+    max = max_range(board,y_start, x_start, d_y, d_x)
+    
+    i = 0
+    while (i < max):
+        j = i
+        while (board[y_start+j*d_y][x_start+j*d_x] == col and j < max - 1):
+            j += 1  
+
+        if (j == max - 1 and board[y_start+j*d_y][x_start+j*d_x] == col):
+            j += 1
+
+        if j-i == length:
+            j -= 1
+            type = is_bounded(board,y_start+j*d_y,x_start+j*d_x,length,d_y,d_x)
+            if type == "OPEN":
+                num_open += 1
+            elif type == "SEMIOPEN":
+                num_semi_open += 1
+            elif type == "CLOSED":
+                num_closed += 1
+
+        i = j
+        i += 1
+    
+    return (num_open,num_semi_open,num_closed)
+
 def max_range(board,y_start, x_start, d_y, d_x):
     if d_y == 0 and d_x == 0:
         return 0
@@ -125,6 +156,60 @@ def detect_rows(board, col, length):
 
     return open_seq_count, semi_open_seq_count
 
+def detect_rows2(board, col, length):
+    open_seq_count, semi_open_seq_count, closed_seq_count = 0, 0, 0
+    detected = (0, 0, 0)
+
+    for size in range(len(board)):
+        detected = detect_row2(board, col, size, 0, length, 0, 1) # at each row check all the columns (0, 1)
+        open_seq_count += detected[0]
+        semi_open_seq_count += detected[1]
+        closed_seq_count += detected[2]
+
+        detected = detect_row2(board, col, 0, size, length, 1, 0) # at each column check all the rows (1, 0)
+        open_seq_count += detected[0]
+        semi_open_seq_count += detected[1]
+        closed_seq_count += detected[2]
+
+        if size >= length: 
+
+            #Left to right diagonal checks
+            #starts from bottom left corner
+            detected = detect_row2(board, col, len(board) - size, 0, length, 1, 1)
+            open_seq_count += detected[0]
+            semi_open_seq_count += detected[1]
+            closed_seq_count += detected[2]
+
+            #starts from top right corner
+            detected = detect_row2(board, col, 0, len(board) - size, length, 1, 1) 
+            open_seq_count += detected[0]
+            semi_open_seq_count += detected[1]
+            closed_seq_count += detected[2]
+
+            #Right to left checks
+            #starts from bottom right corner
+            detected = detect_row2(board, col, len(board) - 1, len(board) - size, length, -1, 1) 
+            open_seq_count += detected[0]
+            semi_open_seq_count += detected[1]
+            closed_seq_count += detected[2]
+
+            detected = detect_row2(board, col, 0, size-1, length, 1, -1) 
+            open_seq_count += detected[0]
+            semi_open_seq_count += detected[1]
+            closed_seq_count += detected[2]
+
+    detected = detect_row2(board, col, 0, 0, length, 1, 1)
+    open_seq_count += detected[0]
+    semi_open_seq_count += detected[1]
+    closed_seq_count += detected[2]
+
+    detected = detect_row2(board, col, 0, 7, length, 1, -1) 
+    open_seq_count += detected[0]
+    semi_open_seq_count += detected[1]
+    closed_seq_count += detected[2]
+
+    return open_seq_count, semi_open_seq_count, closed_seq_count
+
 def search_max(board):
     move_y, move_x = -1, -1 #placeholders assuming there will be a place that is empty and has a score above 0
     max_score = 0
@@ -171,12 +256,12 @@ def score(board):
             open_b[2] + semi_open_b[2] - open_w[2] - semi_open_w[2])
     
 def is_win(board):
-    white = detect_rows(board, "w", 5)
-    black = detect_rows(board, "b", 5)
+    white = detect_rows2(board, "w", 5)
+    black = detect_rows2(board, "b", 5)
     
-    if (white[0] + white[1]) > 0:
+    if (white[0] + white[1] + white[2]) > 0:
         return("White won")
-    elif (black[0] + black[1]) > 0:
+    elif (black[0] + black[1] + black[2]) > 0:
         return("Black won")
     else:
         for y_test in range(len(board)):
