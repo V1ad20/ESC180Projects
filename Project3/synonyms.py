@@ -41,18 +41,20 @@ def build_semantic_descriptors(sentences):
                         d[word][sameword] += 1
     return d
 
-L = [["i", "am", "a", "sick", "man"],
-["i", "am", "a", "spiteful", "man"],
-["i", "am", "an", "unattractive", "man"],
-["i", "believe", "my", "liver", "is", "diseased"],
-["however", "i", "know", "nothing", "at", "all", "about", "my",
-"disease", "and", "do", "not", "know", "for", "certain", "what", "ails", "me"]]
-print(build_semantic_descriptors(L))
+# L = [["i", "am", "a", "sick", "man"],
+# ["i", "am", "a", "spiteful", "man"],
+# ["i", "am", "an", "unattractive", "man"],
+# ["i", "believe", "my", "liver", "is", "diseased"],
+# ["however", "i", "know", "nothing", "at", "all", "about", "my",
+# "disease", "and", "do", "not", "know", "for", "certain", "what", "ails", "me"]]
+# print(build_semantic_descriptors(L))
 
 
 
 def build_semantic_descriptors_from_files(filenames):
     pass
+
+print("hasdf   asdfs".split(" "))
 
 def most_similar_word(word, choices, semantic_descriptors, similarity_fn):
     pass
