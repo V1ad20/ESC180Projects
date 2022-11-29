@@ -4,7 +4,6 @@ Due: 12/05/2022"""
 
 import math
 
-
 def norm(vec):
     '''Return the norm of a vector stored as a dictionary, as 
     described in the handout for Project 3.
@@ -16,7 +15,6 @@ def norm(vec):
     
     return math.sqrt(sum_of_squares)
 
-
 def cosine_similarity(vec1, vec2):
     numer = 0
     mag_val_vec1 = 0
@@ -25,7 +23,7 @@ def cosine_similarity(vec1, vec2):
     for word, occurence in vec1.items():
         if word in vec2_words:
             numer += occurence * vec2[word]
-        mag_val_word1 += occurence ** 2
+        mag_val_vec1 += occurence ** 2
         
     for occurence in vec2.values():
         mag_val_vec2 += occurence ** 2
@@ -35,12 +33,10 @@ def cosine_similarity(vec1, vec2):
    
     return numer / math.sqrt(mag_val_vec1 * mag_val_vec2)
 
-
 # dict = {"a": 1, "b": 2, "c": 3}
 # print(list(dict.keys()))
 # print(list(dict.values()))
 # print(list(dict.items()))
-
 
 def build_semantic_descriptors(sentences):
     d = {}
@@ -64,8 +60,6 @@ def build_semantic_descriptors(sentences):
 # "disease", "and", "do", "not", "know", "for", "certain", "what", "ails", "me"]]
 # print(build_semantic_descriptors(L))
 
-
-
 def build_semantic_descriptors_from_files(filenames):
     filtered_sentences = []
     for filename in filenames:
@@ -85,7 +79,33 @@ def most_similar_word(word, choices, semantic_descriptors, similarity_fn):
     
     return choices[similarity_scores.index(max(similarity_scores))]
 
-# print(most_similar_word("duty",["task", "serious", "young"],build_semantic_descriptors_from_files(["test.txt"]), cosine_similarity()))
+# print(most_similar_word("duty",["task", "serious", "young"],build_semantic_descriptors_from_files(["test.txt"]), cosine_similarity))
 
 def run_similarity_test(filename, semantic_descriptors, similarity_fn):
-    pass
+    word = ""
+    answer = ""
+    choices = []
+    temp = []
+
+    questions = 0
+    correct = 0
+
+    text = open(filename, "r", encoding = "latin1")
+    for line in text.readlines():
+        temp = line.split(" ")
+        word = temp[0]
+        answer = temp[1]
+        choices = temp[2:]
+
+        questions += 1
+
+        if answer == most_similar_word(word, choices, semantic_descriptors, similarity_fn):
+            correct += 1
+    
+    return (correct / questions)
+
+sem_descriptors = build_semantic_descriptors_from_files(["wp.txt", "sw.txt"])
+res = run_similarity_test("test.txt", sem_descriptors, cosine_similarity)
+print(res, "of the guesses were correct")
+        
+# run_similarity_test("test.txt", 1, 1)
