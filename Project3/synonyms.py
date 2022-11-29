@@ -60,11 +60,17 @@ def build_semantic_descriptors_from_files(filenames):
         for sentence in sentences:
             filtered_sentences.append(sentence.replace(",","").replace(":","").replace(";","").replace("--","").replace("-","").replace("  "," ").split(" "))
     return build_semantic_descriptors(filtered_sentences)
-print()
-print(build_semantic_descriptors_from_files(["test.txt"]))
+
+# print(build_semantic_descriptors_from_files(["test.txt"])["draw"])
 
 def most_similar_word(word, choices, semantic_descriptors, similarity_fn):
-    pass
+    similarity_scores = []
+    for choice in choices:
+        similarity_scores.append(similarity_fn(semantic_descriptors[word], semantic_descriptors[choice]))
+    
+    return choices[similarity_scores.index(max(similarity_scores))]
+
+# print(most_similar_word("duty",["task", "serious", "young"],build_semantic_descriptors_from_files(["test.txt"]), cosine_similarity()))
 
 def run_similarity_test(filename, semantic_descriptors, similarity_fn):
     pass
