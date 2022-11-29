@@ -52,10 +52,22 @@ def build_semantic_descriptors(sentences):
 
 
 def build_semantic_descriptors_from_files(filenames):
+<<<<<<< HEAD
     pass
 
 print("hasdf   asdfs".split(" "))
 
+=======
+    filtered_sentences = []
+    for filename in filenames:
+        text = open(filename, "r", econding = "latin1").read()
+        text = text.replace("!", ".").replace("?", ".")
+        sentences = text.split(". ")
+        for sentence in sentences:
+            filtered_sentences.append(sentences.replace(",","").replace(":","").replace(";","").replace("--","").replace("-","").replace("  "," ").split(" "))
+    return build_semantic_descriptors(filtered_sentences)
+    
+>>>>>>> 90ae48b7026b0f3354ca03436d4fcd484827d5be
 def most_similar_word(word, choices, semantic_descriptors, similarity_fn):
     pass
 
