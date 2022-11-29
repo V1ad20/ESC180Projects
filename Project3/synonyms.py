@@ -18,7 +18,22 @@ def norm(vec):
 
 
 def cosine_similarity(vec1, vec2):
-    pass
+    numer = 0
+    mag_val_vec1 = 0
+    mag_val_vec2 = 0
+    vec2_words = vec2.keys()
+    for word, occurence in vec1.items():
+        if word in vec2_words:
+            numer += occurence * vec2[word]
+        mag_val_word1 += occurence ** 2
+        
+    for occurence in vec2.values():
+        mag_val_vec2 += occurence ** 2
+        
+    if min(mag_val_vec1,mag_val_vec2) == 0:
+        return -1
+   
+    return numer / math.sqrt(mag_val_vec1 * mag_val_vec2)
 
 
 # dict = {"a": 1, "b": 2, "c": 3}
