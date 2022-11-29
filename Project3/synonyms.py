@@ -54,12 +54,14 @@ def build_semantic_descriptors(sentences):
 def build_semantic_descriptors_from_files(filenames):
     filtered_sentences = []
     for filename in filenames:
-        text = open(filename, "r", econding = "latin1").read()
-        text = text.replace("!", ".").replace("?", ".")
+        text = open(filename, "r", encoding = "latin1").read()
+        text = text.replace("!", ".").replace("?", ".").replace("\n"," ")
         sentences = text.split(". ")
         for sentence in sentences:
             filtered_sentences.append(sentence.replace(",","").replace(":","").replace(";","").replace("--","").replace("-","").replace("  "," ").split(" "))
     return build_semantic_descriptors(filtered_sentences)
+print()
+print(build_semantic_descriptors_from_files(["test.txt"]))
 
 def most_similar_word(word, choices, semantic_descriptors, similarity_fn):
     pass
