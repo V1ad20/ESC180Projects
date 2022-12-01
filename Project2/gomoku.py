@@ -1,16 +1,6 @@
-"""ESC180 Project 1
+"""ESC180 Project 2
 By: Vlad Surdu and Seok-Gyu (Brian) Kang
-Due: 10/12/2022"""
-"""Gomoku starter code
-You should complete every incomplete function,
-and add more functions and variables as needed.
-
-Note that incomplete functions have 'pass' as the first statement:
-pass is a Python keyword; it is a statement that does nothing.
-This is a placeholder that you should remove once you modify the function.
-
-Author(s): Michael Guerzhoy with tests contributed by Siavash Kazemian.  Last modified: Oct. 28, 2022
-"""
+Due: 11/15/2022"""
 
 def is_empty(board):
     for row in board:
@@ -70,6 +60,37 @@ def detect_row(board, col, y_start, x_start, length, d_y, d_x):
     
     return (num_open,num_semi_open)
 
+def detect_row2(board, col, y_start, x_start, length, d_y, d_x):
+    num_open = 0
+    num_semi_open = 0
+    num_closed = 0
+    type = ""
+    max = max_range(board,y_start, x_start, d_y, d_x)
+    
+    i = 0
+    while (i < max):
+        j = i
+        while (board[y_start+j*d_y][x_start+j*d_x] == col and j < max - 1):
+            j += 1  
+
+        if (j == max - 1 and board[y_start+j*d_y][x_start+j*d_x] == col):
+            j += 1
+
+        if j-i == length:
+            j -= 1
+            type = is_bounded(board,y_start+j*d_y,x_start+j*d_x,length,d_y,d_x)
+            if type == "OPEN":
+                num_open += 1
+            elif type == "SEMIOPEN":
+                num_semi_open += 1
+            elif type == "CLOSED":
+                num_closed += 1
+
+        i = j
+        i += 1
+    
+    return (num_open,num_semi_open,num_closed)
+
 def max_range(board,y_start, x_start, d_y, d_x):
     if d_y == 0 and d_x == 0:
         return 0
@@ -88,34 +109,6 @@ def max_range(board,y_start, x_start, d_y, d_x):
         x_max = x_start + 1
 
     return min(y_max,x_max)
-    
-# def detect_rows(board, col, length):
-#     open_seq_count, semi_open_seq_count = 0, 0
-#     detected = (0, 0)
-
-#     for size in range(len(board)):
-#         detected = detect_row(board, col, size, 0, length, 0, 1) # at each row check all the columns (0, 1)
-#         open_seq_count, semi_open_seq_count = detected[0], detected[1]
-
-#         detected = detect_row(board, col, 0, size, length, 1, 0) # at each column check all the rows (1, 0)
-#         open_seq_count, semi_open_seq_count = detected[0], detected[1]
-
-#         if size >= length: # TEST AND THIS REMOVE THIS COMMENT THIS CODE SHOULD THEORETICALLY WORK BUT NEED TO TEST ONCE ALL THE FUNCTIONS ARE COMPLETE!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-#             detected = detect_row(board, col, (8 - size), 0, length, 1, 1) # (1, 1)
-#             open_seq_count, semi_open_seq_count = detected[0], detected[1]
-
-#             detected = detect_row(board, col, 0, size, length, 1, -1) # (1, -1)
-#             open_seq_count, semi_open_seq_count = detected[0], detected[1]
-
-#             if size > 0: #should not overlap in the "corner" with code outside
-#                 detected = detect_row(board, col, 0, size, length, 1, 1) # (1, 1)
-#                 open_seq_count, semi_open_seq_count = detected[0], detected[1]
-
-#             if size < 7:  #should not overlap in the "corner" with code outside
-#                 detected = detect_row(board, col, (size - 1), 7, length, 1, -1) # (1, -1)
-#                 open_seq_count, semi_open_seq_count = detected[0], detected[1]
-
-#     return open_seq_count, semi_open_seq_count
     
 def detect_rows(board, col, length):
     open_seq_count, semi_open_seq_count = 0, 0
@@ -164,6 +157,60 @@ def detect_rows(board, col, length):
 
     return open_seq_count, semi_open_seq_count
 
+def detect_rows2(board, col, length):
+    open_seq_count, semi_open_seq_count, closed_seq_count = 0, 0, 0
+    detected = (0, 0, 0)
+
+    for size in range(len(board)):
+        detected = detect_row2(board, col, size, 0, length, 0, 1) # at each row check all the columns (0, 1)
+        open_seq_count += detected[0]
+        semi_open_seq_count += detected[1]
+        closed_seq_count += detected[2]
+
+        detected = detect_row2(board, col, 0, size, length, 1, 0) # at each column check all the rows (1, 0)
+        open_seq_count += detected[0]
+        semi_open_seq_count += detected[1]
+        closed_seq_count += detected[2]
+
+        if size >= length: 
+
+            #Left to right diagonal checks
+            #starts from bottom left corner
+            detected = detect_row2(board, col, len(board) - size, 0, length, 1, 1)
+            open_seq_count += detected[0]
+            semi_open_seq_count += detected[1]
+            closed_seq_count += detected[2]
+
+            #starts from top right corner
+            detected = detect_row2(board, col, 0, len(board) - size, length, 1, 1) 
+            open_seq_count += detected[0]
+            semi_open_seq_count += detected[1]
+            closed_seq_count += detected[2]
+
+            #Right to left checks
+            #starts from bottom right corner
+            detected = detect_row2(board, col, len(board) - 1, len(board) - size, length, -1, 1) 
+            open_seq_count += detected[0]
+            semi_open_seq_count += detected[1]
+            closed_seq_count += detected[2]
+
+            detected = detect_row2(board, col, 0, size-1, length, 1, -1) 
+            open_seq_count += detected[0]
+            semi_open_seq_count += detected[1]
+            closed_seq_count += detected[2]
+
+    detected = detect_row2(board, col, 0, 0, length, 1, 1)
+    open_seq_count += detected[0]
+    semi_open_seq_count += detected[1]
+    closed_seq_count += detected[2]
+
+    detected = detect_row2(board, col, 0, 7, length, 1, -1) 
+    open_seq_count += detected[0]
+    semi_open_seq_count += detected[1]
+    closed_seq_count += detected[2]
+
+    return open_seq_count, semi_open_seq_count, closed_seq_count
+
 def search_max(board):
     move_y, move_x = -1, -1 #placeholders assuming there will be a place that is empty and has a score above 0
     max_score = 0
@@ -208,15 +255,14 @@ def score(board):
             50   * open_b[3]                     + 
             10   * semi_open_b[3]                +  
             open_b[2] + semi_open_b[2] - open_w[2] - semi_open_w[2])
-
     
 def is_win(board):
-    white = detect_rows(board, "w", 5)
-    black = detect_rows(board, "b", 5)
+    white = detect_rows2(board, "w", 5)
+    black = detect_rows2(board, "b", 5)
     
-    if (white[0] + white[1]) > 0:
+    if (white[0] + white[1] + white[2]) > 0:
         return("White won")
-    elif (black[0] + black[1]) > 0:
+    elif (black[0] + black[1] + black[2]) > 0:
         return("Black won")
     else:
         for y_test in range(len(board)):
@@ -224,7 +270,6 @@ def is_win(board):
                 if board[y_test][x_test] == " ":
                     return("Continue playing")
         return("Draw")
-
 
 def print_board(board):
     
@@ -243,16 +288,13 @@ def print_board(board):
         s += "*\n"
     s += (len(board[0])*2 + 1)*"*"
     
-    print(s)
-    
+    print(s) 
 
 def make_empty_board(sz):
     board = []
     for i in range(sz):
         board.append([" "]*sz)
     return board
-                
-
 
 def analysis(board):
     for c, full_name in [["b", "Black"], ["w", "White"]]:
@@ -260,12 +302,7 @@ def analysis(board):
         for i in range(2, 6):
             open, semi_open = detect_rows(board, c, i);
             print("Open rows of length %d: %d" % (i, open))
-            print("Semi-open rows of length %d: %d" % (i, semi_open))
-        
-    
-    
-
-        
+            print("Semi-open rows of length %d: %d" % (i, semi_open))    
     
 def play_gomoku(board_size):
     board = make_empty_board(board_size)
@@ -288,10 +325,6 @@ def play_gomoku(board_size):
         game_res = is_win(board)
         if game_res in ["White won", "Black won", "Draw"]:
             return game_res
-            
-            
-        
-        
         
         print("Your move:")
         move_y = int(input("y coord: "))
@@ -303,15 +336,13 @@ def play_gomoku(board_size):
         game_res = is_win(board)
         if game_res in ["White won", "Black won", "Draw"]:
             return game_res
-        
-            
+          
             
 def put_seq_on_board(board, y, x, d_y, d_x, length, col):
     for i in range(length):
         board[y][x] = col        
         y += d_y
         x += d_x
-
 
 def test_is_empty():
     board  = make_empty_board(8)
@@ -333,7 +364,6 @@ def test_is_bounded():
         print("TEST CASE for is_bounded PASSED")
     else:
         print("TEST CASE for is_bounded FAILED")
-
 
 def test_detect_row():
     board = make_empty_board(8)
@@ -488,10 +518,7 @@ def some_tests():
     #        Semi-open rows of length 4: 0
     #        Open rows of length 5: 0
     #        Semi-open rows of length 5: 0
-
-
-  
-            
+ 
 if __name__ == '__main__':
     easy_testset_for_main_functions()
-    
+    some_tests()
