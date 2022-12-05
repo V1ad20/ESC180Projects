@@ -40,7 +40,7 @@ def cosine_similarity(vec1, vec2):
 # print(list(dict.values()))
 # print(list(dict.items()))
 
-def build_semantic_descriptors(sentences):
+def build_semantic_descriptors1(sentences):
     d = {}
     # for sentence in sentences:
     #     for word in sentence:
@@ -66,7 +66,7 @@ def build_semantic_descriptors(sentences):
                         d[sentence[i]][sentence[j]] += 1
     return d
 
-def build_semantic_descriptors2(sentences):
+def build_semantic_descriptors(sentences):
     masterdict = {}
     for sentence in sentences:
         sentencedict = {}
@@ -100,16 +100,25 @@ def build_semantic_descriptors2(sentences):
 # ["i", "believe", "my", "liver", "is", "diseased"],
 # ["however", "i", "know", "nothing", "at", "all", "about", "my",
 # "disease", "and", "do", "not", "know", "for", "certain", "what", "ails", "me"]]
-# print(build_semantic_descriptors(L))
+# print(build_semantic_descriptors(L)["man"])
 
 def build_semantic_descriptors_from_files(filenames):
     filtered_sentences = []
     for filename in filenames:
         text = open(filename, "r", encoding = "latin1").read()
-        text = text.replace("!", ".").replace("?", ".").replace("\n"," ")
+        text = text.lower()
+        text = text.replace("!", ".")
+        text = text.replace("?", ".")
+        text = text.replace("\n"," ")
         sentences = text.split(". ")
         for sentence in sentences:
-            filtered_sentences.append(sentence.replace(",","").replace(":","").replace(";","").replace("--","").replace("-","").replace("  "," ").split(" "))
+            sentence = sentence.replace(","," ")
+            sentence = sentence.replace(":"," ")
+            sentence = sentence.replace(";"," ")
+            sentence = sentence.replace("--"," ")
+            sentence = sentence.replace("-"," ")
+            sentence = sentence.replace("  "," ")
+            filtered_sentences.append(sentence.split(" "))
     return build_semantic_descriptors(filtered_sentences)
 
 # print(build_semantic_descriptors_from_files(["wp.txt"])["consequently"])
@@ -134,7 +143,7 @@ def run_similarity_test(filename, semantic_descriptors, similarity_fn):
     text = open(filename, "r", encoding = "latin1")
     print("hi")
     for line in text.readlines():
-        line = line[:len(line)-1]
+        line = line.replace("\n","")
         temp = line.split(" ")
         word = temp[0]
         answer = temp[1]
@@ -148,15 +157,10 @@ def run_similarity_test(filename, semantic_descriptors, similarity_fn):
     
     return (correct / questions) * 100
 
-# sem_descriptors = build_semantic_descriptors_from_files(["wp.txt", "sw.txt"])
-# print(sem_descriptors)
+# sem_descriptors = build_semantic_descriptors_from_files(["wp.txt","sw.txt"])
+# #print(sem_descriptors)
 # res = run_similarity_test("test.txt", sem_descriptors, cosine_similarity)
 # print(res, "of the guesses were correct")
-        
-# run_similarity_test("test.txt", 1, 1)
-
-# L = build_semantic_descriptors_from_files(["wp.txt"])
-# print(build_semantic_descriptors(L))
 
 
 
