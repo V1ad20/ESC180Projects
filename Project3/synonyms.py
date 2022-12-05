@@ -119,7 +119,7 @@ def run_similarity_test(filename, semantic_descriptors, similarity_fn):
     
     return (correct / questions) * 100
 
-# sem_descriptors = build_semantic_descriptors_from_files(["wp.txt", "sw.txt"])
+sem_descriptors = build_semantic_descriptors_from_files(["wp.txt", "sw.txt"])
 # print(sem_descriptors)
 # res = run_similarity_test("test.txt", sem_descriptors, cosine_similarity)
 # print(res, "of the guesses were correct")
