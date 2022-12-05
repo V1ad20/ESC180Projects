@@ -45,12 +45,40 @@ def build_semantic_descriptors(sentences):
             if not(word in list(d.keys())):
                 d[word] = {}
             for sameword in sentence:
-                if not(sameword == word):
+                if sameword != word:
                     if not(sameword in list(d[word].keys())):
                         d[word][sameword] = 1
                     else:
                         d[word][sameword] += 1
     return d
+
+def build_semantic_descriptors2(sentences):
+    masterdict = {}
+    for sentence in sentences:
+        sentencedict = {}
+        for word in sentence:
+            if word in list(sentencedict.keys()):
+                sentencedict[word] += 1
+            else:
+                sentencedict[word] = 1
+
+        newdict = {}
+        for word in sentencedict.keys():
+            dict_copy = sentencedict.copy()
+            dict_copy.pop(word)
+            newdict[word] = dict_copy
+
+        for word in newdict.keys():
+            if word in list(masterdict.keys()):
+                for possible_synonym in newdict[word]:
+                    if possible_synonym in list(masterdict[word].keys()):
+                        masterdict[word][possible_synonym] += newdict[word][possible_synonym]
+                    else:
+                        masterdict[word][possible_synonym] = 1
+            else:
+                masterdict[word] = newdict[word]
+
+    return masterdict
 
 # L = [["i", "am", "a", "sick", "man"],
 # ["i", "am", "a", "spiteful", "man"],
@@ -92,6 +120,7 @@ def run_similarity_test(filename, semantic_descriptors, similarity_fn):
 
     text = open(filename, "r", encoding = "latin1")
     for line in text.readlines():
+        line = line[:len(line)-1]
         temp = line.split(" ")
         word = temp[0]
         answer = temp[1]
@@ -104,7 +133,7 @@ def run_similarity_test(filename, semantic_descriptors, similarity_fn):
     
     return (correct / questions)
 
-sem_descriptors = build_semantic_descriptors_from_files(["wp.txt", "sw.txt"])
+sem_descriptors = build_semantic_descriptors_from_files(["wp2.txt"])
 res = run_similarity_test("test.txt", sem_descriptors, cosine_similarity)
 print(res, "of the guesses were correct")
         
