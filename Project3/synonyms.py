@@ -57,7 +57,7 @@ def build_semantic_descriptors2(sentences):
     for sentence in sentences:
         sentencedict = {}
         for word in sentence:
-            if word in list(sentencedict.keys()):
+            if word in sentencedict:
                 sentencedict[word] += 1
             else:
                 sentencedict[word] = 1
@@ -69,9 +69,9 @@ def build_semantic_descriptors2(sentences):
             newdict[word] = dict_copy
 
         for word in newdict.keys():
-            if word in list(masterdict.keys()):
+            if word in masterdict:
                 for possible_synonym in newdict[word]:
-                    if possible_synonym in list(masterdict[word].keys()):
+                    if possible_synonym in masterdict[word]:
                         masterdict[word][possible_synonym] += newdict[word][possible_synonym]
                     else:
                         masterdict[word][possible_synonym] = 1
