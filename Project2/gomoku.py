@@ -142,6 +142,7 @@ def detect_rows(board, col, length):
             open_seq_count += detected[0]
             semi_open_seq_count += detected[1]
 
+            #starts from top left corner
             detected = detect_row(board, col, 0, size-1, length, 1, -1) 
             open_seq_count += detected[0]
             semi_open_seq_count += detected[1]
