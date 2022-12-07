@@ -141,7 +141,6 @@ def run_similarity_test(filename, semantic_descriptors, similarity_fn):
     correct = 0
 
     text = open(filename, "r", encoding = "latin1")
-    print("hi")
     for line in text.readlines():
         line = line.replace("\n","")
         temp = line.split(" ")
